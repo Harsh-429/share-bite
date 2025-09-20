@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBite - Impact Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d4aa;
+            --secondary-color: #ff6b35;
+            --accent-color: #4ecdc4;
+            --dark-bg: #0a0a0a;
+            --dark-surface: #1a1a1a;
+            --dark-card: #2a2a2a;
+            --dark-text: #ffffff;
+            --dark-text-secondary: #b0b0b0;
+            --success-color: #00d4aa;
+            --warning-color: #ff6b35;
+            --error-color: #ff4757;
+            --border-color: #333333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --gradient: linear-gradient(135deg, #00d4aa 0%, #4ecdc4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--dark-text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--dark-text);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-card);
+            border-color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
+            border-radius: 12px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--dark-text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Impact Stats */
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--dark-text-secondary);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-card {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .chart-period {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .period-btn {
+            padding: 0.5rem 1rem;
+            background: var(--dark-surface);
+            border: 1px solid var(--border-color);
+            color: var(--dark-text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn.active,
+        .period-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Mock Chart */
+        .chart-container {
+            height: 300px;
+            background: var(--dark-surface);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .leaderboard-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            background: var(--dark-surface);
+            border: 1px solid var(--border-color);
+            color: var(--dark-text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            background: var(--dark-surface);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            width: 50px;
+            text-align: center;
+        }
+
+        .rank.first {
+            color: #ffd700;
+        }
+
+        .rank.second {
+            color: #c0c0c0;
+        }
+
+        .rank.third {
+            color: #cd7f32;
+        }
+
+        .organization-info {
+            flex: 1;
+            margin-left: 1rem;
+        }
+
+        .organization-name {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.25rem;
+        }
+
+        .organization-role {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .impact-metrics {
+            text-align: right;
+        }
+
+        .meals-count {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--success-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .co2-saved {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .star {
+            color: #ffd700;
+        }
+
+        /* Impact Stories */
+        .stories-section {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stories-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .stories-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .stories-subtitle {
+            color: var(--dark-text-secondary);
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-card {
+            background: var(--dark-surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .story-info h4 {
+            color: var(--dark-text);
+            margin-bottom: 0.25rem;
+        }
+
+        .story-role {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .story-content {
+            color: var(--dark-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .story-impact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .impact-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .impact-label {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* CSR Recognition */
+        .csr-section {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .csr-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+        }
+
+        .csr-description {
+            color: var(--dark-text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .csr-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .csr-badge {
+            background: var(--gradient);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .impact-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .csr-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--dark-card);
+            color: var(--dark-text);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow);
+            z-index: 1500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success-color);
+        }
+
+        .notification.error {
+            border-left-color: var(--error-color);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>ShareBite</span>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="main.html">Home</a></li>
+                    <li><a href="dashboard.html">Provider Dashboard</a></li>
+                    <li><a href="receiver-dashboard.html">Receiver Dashboard</a></li>
+                    <li><a href="bulk-selling.html">Bulk Selling</a></li>
+                    <li><a href="admin-dashboard.html">Admin</a></li>
+                    <li><a href="#" class="active">Impact</a></li>
+                </ul>
+            </nav>
+            <a href="main.html" class="btn btn-secondary">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Making Every Bite Count</h1>
+            <p>See the incredible impact ShareBite is making in communities across the country. Every meal saved, every life touched, every step towards zero hunger.</p>
+        </section>
+
+        <!-- Impact Stats -->
+        <section class="impact-stats">
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-value">45,000+</div>
+                <div class="stat-label">Meals Saved</div>
+                <div class="stat-description">From going to waste</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="stat-value">2,500kg</div>
+                <div class="stat-label">CO₂ Reduced</div>
+                <div class="stat-description">Environmental impact</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="stat-value">₹1.2M</div>
+                <div class="stat-label">Money Saved</div>
+                <div class="stat-description">For NGOs & shelters</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value">1,250</div>
+                <div class="stat-label">Active Users</div>
+                <div class="stat-description">Making a difference</div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Meals Saved Over Time</h3>
+                    <div class="chart-period">
+                        <button class="period-btn active">7D</button>
+                        <button class="period-btn">30D</button>
+                        <button class="period-btn">90D</button>
+                        <button class="period-btn">1Y</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-color);"></i>
+                    <div style="margin-left: 1rem;">
+                        <div>Interactive Chart</div>
+                        <div style="font-size: 0.9rem; margin-top: 0.5rem;">Meals saved per day</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Impact Distribution</h3>
+                </div>
+                <div class="chart-container">
+                    <i class="fas fa-chart-pie" style="font-size: 3rem; color: var(--accent-color);"></i>
+                    <div style="margin-left: 1rem;">
+                        <div>Pie Chart</div>
+                        <div style="font-size: 0.9rem; margin-top: 0.5rem;">By food type</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard -->
+        <section class="leaderboard">
+            <div class="leaderboard-header">
+                <h3 class="leaderboard-title">Top Contributors</h3>
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" onclick="showLeaderboard('providers')">Providers</button>
+                    <button class="tab-btn" onclick="showLeaderboard('receivers')">Receivers</button>
+                    <button class="tab-btn" onclick="showLeaderboard('overall')">Overall</button>
+                </div>
+            </div>
+            <div id="providers-leaderboard">
+                <div class="leaderboard-item">
+                    <div class="rank first">1</div>
+                    <div class="organization-info">
+                        <div class="organization-name">Hostel Dining Hall</div>
+                        <div class="organization-role">Food Provider</div>
+                        <div class="rating">
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <span style="margin-left: 0.5rem; color: var(--dark-text-secondary);">4.9</span>
+                        </div>
+                    </div>
+                    <div class="impact-metrics">
+                        <div class="meals-count">5,250 meals</div>
+                        <div class="co2-saved">125kg CO₂ saved</div>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="rank second">2</div>
+                    <div class="organization-info">
+                        <div class="organization-name">Restaurant ABC</div>
+                        <div class="organization-role">Food Provider</div>
+                        <div class="rating">
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <span style="margin-left: 0.5rem; color: var(--dark-text-secondary);">4.8</span>
+                        </div>
+                    </div>
+                    <div class="impact-metrics">
+                        <div class="meals-count">4,800 meals</div>
+                        <div class="co2-saved">110kg CO₂ saved</div>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="rank third">3</div>
+                    <div class="organization-info">
+                        <div class="organization-name">Café XYZ</div>
+                        <div class="organization-role">Food Provider</div>
+                        <div class="rating">
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="fas fa-star star"></i>
+                            <i class="far fa-star star"></i>
+                            <span style="margin-left: 0.5rem; color: var(--dark-text-secondary);">4.7</span>
+                        </div>
+                    </div>
+                    <div class="impact-metrics">
+                        <div class="meals-count">3,200 meals</div>
+                        <div class="co2-saved">75kg CO₂ saved</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Stories -->
+        <section class="stories-section">
+            <div class="stories-header">
+                <h3 class="stories-title">Success Stories</h3>
+                <p class="stories-subtitle">Real stories from our community members</p>
+            </div>
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-header">
+                        <div class="story-avatar">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="story-info">
+                            <h4>Radha Sharma</h4>
+                            <div class="story-role">Orphanage Manager</div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        "ShareBite has been a blessing for our orphanage. We've saved over ₹50,000 in food costs and our children now have access to fresh, nutritious meals every day. The platform has made our operations so much more efficient."
+                    </div>
+                    <div class="story-impact">
+                        <div>
+                            <div class="impact-number">₹50,000</div>
+                            <div class="impact-label">Saved</div>
+                        </div>
+                        <div>
+                            <div class="impact-number">850</div>
+                            <div class="impact-label">Meals</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-header">
+                        <div class="story-avatar">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="story-info">
+                            <h4>Rajesh Kumar</h4>
+                            <div class="story-role">Hostel Manager</div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        "We used to throw away so much food after dinner. Now with ShareBite, we can help feed hundreds of people while reducing our waste. It's a win-win for everyone and we feel good about contributing to the community."
+                    </div>
+                    <div class="story-impact">
+                        <div>
+                            <div class="impact-number">5,250</div>
+                            <div class="impact-label">Meals Donated</div>
+                        </div>
+                        <div>
+                            <div class="impact-number">125kg</div>
+                            <div class="impact-label">CO₂ Saved</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-header">
+                        <div class="story-avatar">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                        <div class="story-info">
+                            <h4>Local Pig Farm</h4>
+                            <div class="story-role">Animal Shelter</div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        "The leftover rice and vegetables we receive through ShareBite help us feed our animals while reducing food waste. It's an innovative solution that benefits both humans and animals."
+                    </div>
+                    <div class="story-impact">
+                        <div>
+                            <div class="impact-number">2,000kg</div>
+                            <div class="impact-label">Animal Feed</div>
+                        </div>
+                        <div>
+                            <div class="impact-number">500</div>
+                            <div class="impact-label">Animals Fed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CSR Recognition -->
+        <section class="csr-section">
+            <h3 class="csr-title">CSR Recognition & Government Integration</h3>
+            <p class="csr-description">
+                ShareBite helps organizations fulfill their Corporate Social Responsibility goals while contributing to national objectives like Zero Hunger (SDG-2) and Responsible Consumption (SDG-12).
+            </p>
+            <div class="csr-badges">
+                <div class="csr-badge">
+                    <i class="fas fa-award"></i>
+                    CSR Certificate
+                </div>
+                <div class="csr-badge">
+                    <i class="fas fa-leaf"></i>
+                    Environmental Impact
+                </div>
+                <div class="csr-badge">
+                    <i class="fas fa-handshake"></i>
+                    Community Service
+                </div>
+                <div class="csr-badge">
+                    <i class="fas fa-chart-line"></i>
+                    Impact Tracking
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        // Leaderboard switching
+        function showLeaderboard(type) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // In a real application, this would load different data
+            showNotification(`Showing ${type} leaderboard`, 'success');
+        }
+
+        // Period switching
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                showNotification(`Updated chart for ${this.textContent}`, 'success');
+            });
+        });
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card, .story-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('fade-in');
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+

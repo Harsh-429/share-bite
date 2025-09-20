@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBite - Receiver Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d4aa;
+            --secondary-color: #ff6b35;
+            --accent-color: #4ecdc4;
+            --dark-bg: #0a0a0a;
+            --dark-surface: #1a1a1a;
+            --dark-card: #2a2a2a;
+            --dark-text: #ffffff;
+            --dark-text-secondary: #b0b0b0;
+            --success-color: #00d4aa;
+            --warning-color: #ff6b35;
+            --error-color: #ff4757;
+            --border-color: #333333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --gradient: linear-gradient(135deg, #00d4aa 0%, #4ecdc4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--dark-surface);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .user-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--dark-card);
+            border-radius: 8px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: var(--dark-text-secondary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--dark-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+            background: var(--dark-card);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            min-width: 300px;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            outline: none;
+            flex: 1;
+            margin-left: 0.5rem;
+        }
+
+        .search-bar i {
+            color: var(--dark-text-secondary);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--dark-card);
+            border: 1px solid var(--border-color);
+            color: var(--dark-text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .notification-btn {
+            position: relative;
+            background: var(--dark-card);
+            border: 1px solid var(--border-color);
+            color: var(--dark-text);
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--dark-text);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-card);
+            border-color: var(--primary-color);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            color: var(--success-color);
+        }
+
+        /* Food Listings */
+        .food-listings {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .food-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .food-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .food-card.urgent {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .food-card.critical {
+            border-left: 4px solid var(--error-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .food-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .provider-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .provider-avatar {
+            width: 30px;
+            height: 30px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .priority-normal {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--success-color);
+        }
+
+        .priority-urgent {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--warning-color);
+        }
+
+        .priority-critical {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--error-color);
+        }
+
+        .food-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: var(--dark-text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        .hygiene-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hygiene-tag {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--success-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .distance-info {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--dark-surface);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--dark-text-secondary);
+        }
+
+        /* Pre-booking Section */
+        .pre-booking {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .pre-booking h3 {
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+        }
+
+        .pre-booking-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--dark-surface);
+            color: var(--dark-text);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* My Requests Section */
+        .request-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .request-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-approved {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--error-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-bar {
+                min-width: 200px;
+            }
+
+            .food-details {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--dark-card);
+            color: var(--dark-text);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow);
+            z-index: 1500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success-color);
+        }
+
+        .notification.error {
+            border-left-color: var(--error-color);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="user-name">Radha Sharma</div>
+                    <div class="user-role">Orphanage Manager</div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="showSection('overview')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('available-food')">
+                        <i class="fas fa-utensils"></i>
+                        Available Food
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('pre-booking')">
+                        <i class="fas fa-calendar-plus"></i>
+                        Pre-booking
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('my-requests')">
+                        <i class="fas fa-list"></i>
+                        My Requests
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('orders')">
+                        <i class="fas fa-shopping-cart"></i>
+                        Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('bulk-purchase')">
+                        <i class="fas fa-shopping-cart"></i>
+                        Bulk Purchase
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="nearby-sellers.html" class="nav-link">
+                        <i class="fas fa-store"></i>
+                        Nearby Sellers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('profile')">
+                        <i class="fas fa-user-cog"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="main.html" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="page-title" id="pageTitle">Available Food</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search food items..." id="searchInput">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterFood('all')">All</button>
+                        <button class="filter-btn" onclick="filterFood('urgent')">Urgent</button>
+                        <button class="filter-btn" onclick="filterFood('nearby')">Nearby</button>
+                        <button class="filter-btn" onclick="filterFood('vegetarian')">Vegetarian</button>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Meals Received</div>
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">850</div>
+                        <div class="stat-change">+15% this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Active Requests</div>
+                            <div class="stat-icon">
+                                <i class="fas fa-hand-holding"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-change">3 pending approval</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Money Saved</div>
+                            <div class="stat-icon">
+                                <i class="fas fa-rupee-sign"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">₹25,000</div>
+                        <div class="stat-change">This month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">CO₂ Saved</div>
+                            <div class="stat-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">120kg</div>
+                        <div class="stat-change">Environmental impact</div>
+                    </div>
+                </div>
+
+                <div class="pre-booking">
+                    <h3>Quick Pre-booking</h3>
+                    <p style="color: var(--dark-text-secondary); margin-bottom: 1rem;">Set up automatic requests for regular meal needs</p>
+                    <form class="pre-booking-form" id="preBookingForm">
+                        <div class="form-group">
+                            <label for="mealType">Meal Type</label>
+                            <select id="mealType" required>
+                                <option value="">Select meal type</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="servings">Servings Needed</label>
+                            <input type="number" id="servings" placeholder="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="frequency">Frequency</label>
+                            <select id="frequency" required>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxDistance">Max Distance (km)</label>
+                            <input type="number" id="maxDistance" placeholder="10" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Set Pre-booking</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Available Food Section -->
+            <section id="available-food" class="content-section" style="display: none;">
+                <div class="food-listings">
+                    <!-- Urgent Food Card -->
+                    <div class="food-card critical">
+                        <div class="card-header">
+                            <div>
+                                <div class="food-title">Fresh Rotis & Dal - URGENT</div>
+                                <div class="provider-info">
+                                    <div class="provider-avatar">H</div>
+                                    <span>Hostel Dining Hall • 0.5km away</span>
+                                </div>
+                            </div>
+                            <div class="priority-badge priority-critical">Critical</div>
+                        </div>
+                        <div class="food-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Quantity</div>
+                                <div class="detail-value">100 servings</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Type</div>
+                                <div class="detail-value">Vegetarian</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Safe Until</div>
+                                <div class="detail-value">11:00 PM (45 min)</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Location</div>
+                                <div class="detail-value">Hostel Dining Hall</div>
+                            </div>
+                        </div>
+                        <div class="hygiene-tags">
+                            <span class="hygiene-tag">
+                                <i class="fas fa-check"></i>
+                                Freshly Cooked
+                            </span>
+                            <span class="hygiene-tag">
+                                <i class="fas fa-check"></i>
+                                Properly Covered
+                            </span>
+                            <span class="hygiene-tag">
+                                <i class="fas fa-check"></i>
+                                Safe Storage
+                            </span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-success btn-sm" onclick="requestFood('urgent-rotis')">
+                                <i class="fas fa-hand-holding-heart"></i>
+                                Request Now
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="viewDetails('urgent-rotis')">
+                                <i class="fas fa-info-circle"></i>
+                                Details
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="contactProvider('hostel')">
+                                <i class="fas fa-phone"></i>
+                                Contact
+                            </button>
+                        </div>
+                        <div class="distance-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            0.5km
+                        </div>
+                    </div>
+
+                    <!-- Normal Food Card -->
+                    <div class="food-card">
+                        <div class="card-header">
+                            <div>
+                                <div class="food-title">Leftover Rice & Curry</div>
+                                <div class="provider-info">
+                                    <div class="provider-avatar">R</div>
+                                    <span>Restaurant ABC • 2.1km away</span>
+                                </div>
+                            </div>
+                            <div class="priority-badge priority-normal">Normal</div>
+                        </div>
+                        <div class="food-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Quantity</div>
+                                <div class="detail-value">25kg</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Type</div>
+                                <div class="detail-value">Mixed</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Safe Until</div>
+                                <div class="detail-value">Tomorrow 6 AM</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Location</div>
+                                <div class="detail-value">Restaurant ABC</div>
+                            </div>
+                        </div>
+                        <div class="hygiene-tags">
+                            <span class="hygiene-tag">
+                                <i class="fas fa-check"></i>
+                                Freshly Cooked
+                            </span>
+                            <span class="hygiene-tag">
+                                <i class="fas fa-check"></i>
+                                Properly Covered
+                            </span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-sm" onclick="requestFood('rice-curry')">
+                                <i class="fas fa-hand-holding-heart"></i>
+                                Request Food
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="viewDetails('rice-curry')">
+                                <i class="fas fa-info-circle"></i>
+                                Details
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="contactProvider('restaurant')">
+                                <i class="fas fa-phone"></i>
+                                Contact
+                            </button>
+                        </div>
+                        <div class="distance-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            2.1km
+                        </div>
+                    </div>
+
+                    <!-- Urgent Food Card -->
+                    <div class="food-card urgent">
+                        <div class="card-header">
+                            <div>
+                                <div class="food-title">Sandwiches & Snacks</div>
+                                <div class="provider-info">
+                                    <div class="provider-avatar">C</div>
+                                    <span>Café XYZ • 1.2km away</span>
+                                </div>
+                            </div>
+                            <div class="priority-badge priority-urgent">Urgent</div>
+                        </div>
+                        <div class="food-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Quantity</div>
+                                <div class="detail-value">40 pieces</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Type</div>
+                                <div class="detail-value">Vegetarian</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Safe Until</div>
+                                <div class="detail-value">2 hours</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Location</div>
+                                <div class="detail-value">Café XYZ</div>
+                            </div>
+                        </div>
+                        <div class="hygiene-tags">
+                            <span class="hygiene-tag">
+                                <i class="fas fa-check"></i>
+                                Freshly Prepared
+                            </span>
+                            <span class="hygiene-tag">
+                                <i class="fas fa-check"></i>
+                                Properly Packed
+                            </span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-warning btn-sm" onclick="requestFood('sandwiches')">
+                                <i class="fas fa-hand-holding-heart"></i>
+                                Request Urgently
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="viewDetails('sandwiches')">
+                                <i class="fas fa-info-circle"></i>
+                                Details
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="contactProvider('cafe')">
+                                <i class="fas fa-phone"></i>
+                                Contact
+                            </button>
+                        </div>
+                        <div class="distance-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            1.2km
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections will be added here -->
+            <section id="pre-booking" class="content-section" style="display: none;">
+                <div class="pre-booking">
+                    <h3>Pre-booking Management</h3>
+                    <p style="color: var(--dark-text-secondary); margin-bottom: 1rem;">Manage your automatic meal requests</p>
+                    <!-- Pre-booking management content will go here -->
+                </div>
+            </section>
+
+            <section id="my-requests" class="content-section" style="display: none;">
+                <div class="request-card">
+                    <div class="request-header">
+                        <div>
+                            <h4>Fresh Rotis & Dal</h4>
+                            <p style="color: var(--dark-text-secondary); margin: 0.5rem 0;">Hostel Dining Hall • 100 servings</p>
+                        </div>
+                        <span class="request-status status-pending">Pending</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-sm">View Details</button>
+                        <button class="btn btn-secondary btn-sm">Cancel Request</button>
+                    </div>
+                </div>
+
+                <div class="request-card">
+                    <div class="request-header">
+                        <div>
+                            <h4>Leftover Rice</h4>
+                            <p style="color: var(--dark-text-secondary); margin: 0.5rem 0;">Restaurant ABC • 25kg</p>
+                        </div>
+                        <span class="request-status status-approved">Approved</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary btn-sm">Track Pickup</button>
+                        <button class="btn btn-secondary btn-sm">View Details</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="orders" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">My Orders</h2>
+                    <div class="header-actions">
+                        <select id="orderFilter" onchange="filterOrders()">
+                            <option value="all">All Orders</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="ordersList">
+                        <!-- Orders will be dynamically loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="bulk-purchase" class="content-section" style="display: none;">
+                <div class="pre-booking">
+                    <h3>Bulk Purchase Panel</h3>
+                    <p style="color: var(--dark-text-secondary); margin-bottom: 1rem;">Purchase affordable bulk meals from providers</p>
+                    <!-- Bulk purchase content will go here -->
+                </div>
+            </section>
+
+            <section id="analytics" class="content-section" style="display: none;">
+                <div class="pre-booking">
+                    <h3>Analytics & Impact</h3>
+                    <p style="color: var(--dark-text-secondary); margin-bottom: 1rem;">Track your organization's impact and savings</p>
+                    <!-- Analytics content will go here -->
+                </div>
+            </section>
+
+            <section id="profile" class="content-section" style="display: none;">
+                <div class="pre-booking">
+                    <h3>Profile Settings</h3>
+                    <p style="color: var(--dark-text-secondary); margin-bottom: 1rem;">Manage your organization profile and preferences</p>
+                    <!-- Profile content will go here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script src="backend.js"></script>
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+
+            // Update active nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update page title
+            const titles = {
+                'overview': 'Dashboard Overview',
+                'available-food': 'Available Food',
+                'pre-booking': 'Pre-booking Management',
+                'my-requests': 'My Requests',
+                'orders': 'My Orders',
+                'bulk-purchase': 'Bulk Purchase',
+                'analytics': 'Analytics & Impact',
+                'profile': 'Profile Settings'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionId] || 'Dashboard';
+        }
+
+        // Filter food items
+        function filterFood(filter) {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter logic would go here
+            showNotification(`Filtered by: ${filter}`, 'success');
+        }
+
+        // Food request functions
+        function requestFood(foodId) {
+            showNotification('Food request sent successfully! Provider will be notified.', 'success');
+        }
+
+        function viewDetails(foodId) {
+            showNotification('Opening food details...', 'success');
+        }
+
+        function contactProvider(providerId) {
+            showNotification('Opening contact options...', 'success');
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Toggle notifications
+        function toggleNotifications() {
+            showNotification('You have 5 new food notifications and 2 urgent requests.', 'warning');
+        }
+
+        // Pre-booking form
+        document.getElementById('preBookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Pre-booking set successfully! You will receive notifications for matching food.', 'success');
+            this.reset();
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // Search logic would go here
+            if (searchTerm.length > 2) {
+                showNotification(`Searching for: ${searchTerm}`, 'success');
+            }
+        });
+
+        // Order Management Functions
+        let currentUserId = 'user2'; // Default user ID for receiver
+
+        function loadOrders() {
+            if (!window.sharebiteBackend) {
+                console.error('Backend not loaded');
+                return;
+            }
+
+            const orders = window.sharebiteBackend.getOrdersByUser(currentUserId);
+            const ordersList = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<p style="text-align: center; color: var(--dark-text-secondary); padding: 2rem;">No orders found.</p>';
+                return;
+            }
+
+            ordersList.innerHTML = orders.map(order => `
+                <div class="request-card">
+                    <div class="request-header">
+                        <div>
+                            <h4>Order #${order.id.substring(0, 8)}</h4>
+                            <p style="color: var(--dark-text-secondary); margin: 0.5rem 0;">${order.foodName || 'N/A'} • ${order.quantity || 'N/A'} ${order.unit || ''}</p>
+                        </div>
+                        <span class="request-status status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                    </div>
+                    <div class="card-actions">
+                        ${order.status === 'approved' ? `
+                            <button class="btn btn-primary btn-sm" onclick="trackOrder('${order.id}')">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Track Order
+                            </button>
+                        ` : ''}
+                        ${order.status === 'completed' ? `
+                            <button class="btn btn-success btn-sm" onclick="rateOrder('${order.id}')">
+                                <i class="fas fa-star"></i>
+                                Rate Order
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-secondary btn-sm" onclick="viewOrderDetails('${order.id}')">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                        ${order.status === 'pending' ? `
+                            <button class="btn btn-secondary btn-sm" onclick="cancelOrder('${order.id}')">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewOrderDetails(orderId) {
+            const orders = window.sharebiteBackend.getOrdersByUser(currentUserId);
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                alert(`Order Details:\nID: ${order.id}\nStatus: ${order.status}\nCreated: ${new Date(order.createdAt).toLocaleString()}\nFood: ${order.foodName}\nQuantity: ${order.quantity} ${order.unit}\nProvider: ${order.sellerName || 'N/A'}\nTotal: ₹${order.totalAmount || '0'}`);
+            }
+        }
+
+        function trackOrder(orderId) {
+            showNotification('Order tracking feature coming soon!', 'success');
+        }
+
+        function rateOrder(orderId) {
+            const rating = prompt('Rate this order (1-5 stars):');
+            if (rating && rating >= 1 && rating <= 5) {
+                showNotification(`Thank you for rating! You gave ${rating} stars.`, 'success');
+            }
+        }
+
+        function cancelOrder(orderId) {
+            if (confirm('Are you sure you want to cancel this order?')) {
+                if (window.sharebiteBackend) {
+                    window.sharebiteBackend.updateOrderStatus(orderId, 'cancelled');
+                    loadOrders();
+                    showNotification('Order cancelled successfully!', 'success');
+                }
+            }
+        }
+
+        function filterOrders() {
+            const filter = document.getElementById('orderFilter').value;
+            const orders = window.sharebiteBackend.getOrdersByUser(currentUserId);
+            const filteredOrders = filter === 'all' ? orders : orders.filter(order => order.status === filter);
+            
+            const ordersList = document.getElementById('ordersList');
+            if (filteredOrders.length === 0) {
+                ordersList.innerHTML = '<p style="text-align: center; color: var(--dark-text-secondary); padding: 2rem;">No orders found for this filter.</p>';
+                return;
+            }
+
+            ordersList.innerHTML = filteredOrders.map(order => `
+                <div class="request-card">
+                    <div class="request-header">
+                        <div>
+                            <h4>Order #${order.id.substring(0, 8)}</h4>
+                            <p style="color: var(--dark-text-secondary); margin: 0.5rem 0;">${order.foodName || 'N/A'} • ${order.quantity || 'N/A'} ${order.unit || ''}</p>
+                        </div>
+                        <span class="request-status status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                    </div>
+                    <div class="card-actions">
+                        ${order.status === 'approved' ? `
+                            <button class="btn btn-primary btn-sm" onclick="trackOrder('${order.id}')">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Track Order
+                            </button>
+                        ` : ''}
+                        ${order.status === 'completed' ? `
+                            <button class="btn btn-success btn-sm" onclick="rateOrder('${order.id}')">
+                                <i class="fas fa-star"></i>
+                                Rate Order
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-secondary btn-sm" onclick="viewOrderDetails('${order.id}')">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                        ${order.status === 'pending' ? `
+                            <button class="btn btn-secondary btn-sm" onclick="cancelOrder('${order.id}')">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show available food section by default
+            showSection('available-food');
+
+            // Load orders when orders section is shown
+            const originalShowSection = showSection;
+            showSection = function(sectionId) {
+                originalShowSection(sectionId);
+                if (sectionId === 'orders') {
+                    loadOrders();
+                }
+            };
+        });
+    </script>
+</body>
+</html>

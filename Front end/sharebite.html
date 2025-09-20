@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBite - Sharing Every Bite That Counts</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* General Styling */
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #FFC107;
+            --background-color: #f4f4f9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #root {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.8em;
+        }
+        .header button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Login Screen */
+        .login-container {
+            text-align: center;
+            padding: 50px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        .login-container h2 {
+            margin-bottom: 2rem;
+        }
+        .role-selector button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 0 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s;
+        }
+        .role-selector button:hover {
+            background-color: #45a049;
+        }
+        .role-selector button.receiver {
+            background-color: var(--secondary-color);
+            color: #333;
+        }
+        .role-selector button.receiver:hover {
+            background-color: #e6b800;
+        }
+        
+        /* Dashboard Styling */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Forms and Panels */
+        .panel {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        .panel h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--background-color);
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .toggle-buttons {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .toggle-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            background: #f0f0f0;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .toggle-buttons button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .toggle-buttons button:first-child {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        .toggle-buttons button:last-child {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Listings */
+        .listings-container h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .filter-buttons {
+            margin-bottom: 1rem;
+        }
+        .filter-buttons button {
+            margin-right: 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .filter-buttons button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .food-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+            padding: 20px;
+            position: relative;
+            border-left: 5px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .food-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .food-card.bulk-sale {
+            border-left-color: var(--secondary-color);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+        }
+        .tag-donation { background-color: var(--primary-color); }
+        .tag-bulk-sale { background-color: var(--secondary-color); color: #333; }
+        .tag-accepted { background-color: #e74c3c; }
+
+        .food-card h4 { margin: 0 0 10px 0; font-size: 1.3em; }
+        .food-card p { margin: 5px 0; }
+        .food-card .price { font-weight: bold; font-size: 1.2em; color: var(--primary-color); }
+        .food-card.bulk-sale .price { color: #c49507; }
+
+        .card-actions button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .card-actions button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* Impact Dashboard */
+        .impact-dashboard {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .impact-card {
+            flex: 1;
+            background: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        .impact-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 0;
+            color: var(--primary-color);
+        }
+        .impact-card .label {
+            font-size: 1em;
+            color: #666;
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+    
+    const { useState, useEffect, useMemo } = React;
+
+    // --- INITIAL DUMMY DATA ---
+    const initialFoodPosts = [
+        { id: 1, provider: "Central College Hostel", type: "Donation", item: "100 Rotis & Sabzi", quantity: 100, safeUntil: "11 PM", forWhom: "Human", status: "Available", price: 0 },
+        { id: 2, provider: "Downtown Hotel", type: "Bulk Sale", item: "Leftover Rice", quantity: 15, safeUntil: "Next Morning", forWhom: "Animal", status: "Available", price: 20 },
+        { id: 3, provider: "Campus Cafeteria", type: "Donation", item: "Fresh Salad Boxes", quantity: 30, safeUntil: "9 PM", forWhom: "Human", status: "Available", price: 0 },
+        { id: 4, provider: "Grand Restaurant", type: "Bulk Sale", item: "Bulk Dal Makhani", quantity: 50, safeUntil: "Tomorrow", forWhom: "Human", status: "Available", price: 30 },
+        { id: 5, provider: "Central College Hostel", type: "Donation", item: "20 Litres Milk", quantity: 20, safeUntil: "8 PM", forWhom: "Human", status: "Accepted", price: 0 },
+    ];
+
+    // --- COMPONENTS ---
+
+    // Header Component
+    const Header = ({ userType, onLogout }) => (
+        <header className="header">
+            <h1>🚀 ShareBite</h1>
+            {userType && <button onClick={onLogout}>Log Out</button>}
+        </header>
+    );
+
+    // Login Screen Component
+    const LoginScreen = ({ onLogin }) => (
+        <div className="login-container">
+            <h2>Welcome to ShareBite!</h2>
+            <p>Select your role to continue.</p>
+            <div className="role-selector">
+                <button onClick={() => onLogin('Provider')}>I'm a Food Provider</button>
+                <button className="receiver" onClick={() => onLogin('Receiver')}>I'm a Food Receiver</button>
+            </div>
+        </div>
+    );
+
+    // Food Posting Form for Providers
+    const FoodPostForm = ({ onAddPost }) => {
+        const [postType, setPostType] = useState('Donation');
+        const [item, setItem] = useState('');
+        const [quantity, setQuantity] = useState('');
+        const [safeUntil, setSafeUntil] = useState('');
+        const [forWhom, setForWhom] = useState('Human');
+        const [price, setPrice] = useState('');
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            if (!item || !quantity || !safeUntil) {
+                alert("Please fill all fields.");
+                return;
+            }
+            if (postType === 'Bulk Sale' && !price) {
+                alert("Please enter a price for bulk sale.");
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                provider: "Your Organization",
+                type: postType,
+                item,
+                quantity: parseInt(quantity),
+                safeUntil,
+                forWhom,
+                status: "Available",
+                price: postType === 'Donation' ? 0 : parseFloat(price)
+            };
+            onAddPost(newPost);
+            
+            // Reset form
+            setItem('');
+            setQuantity('');
+            setSafeUntil('');
+            setPrice('');
+        };
+
+        return (
+            <div className="panel">
+                <h3>Post Surplus Food</h3>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Posting Type</label>
+                        <div className="toggle-buttons">
+                            <button type="button" className={postType === 'Donation' ? 'active' : ''} onClick={() => setPostType('Donation')}>
+                                ✅ Free Donation
+                            </button>
+                            <button type="button" className={postType === 'Bulk Sale' ? 'active' : ''} onClick={() => setPostType('Bulk Sale')}>
+                                💰 Low-Cost Bulk Sale
+                            </button>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="item">Food Item / Description</label>
+                        <input id="item" type="text" value={item} onChange={e => setItem(e.target.value)} placeholder="e.g., 50 Rotis & Dal" required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="quantity">Quantity (Servings or Kgs)</label>
+                        <input id="quantity" type="number" value={quantity} onChange={e => setQuantity(e.target.value)} placeholder="e.g., 50" required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="safeUntil">Safe Until</label>
+                        <input id="safeUntil" type="text" value={safeUntil} onChange={e => setSafeUntil(e.target.value)} placeholder="e.g., 11 PM Tonight" required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="forWhom">For Whom?</label>
+                        <select id="forWhom" value={forWhom} onChange={e => setForWhom(e.target.value)}>
+                            <option value="Human">🍽️ Human Consumption</option>
+                            <option value="Animal">🐕 Animal Consumption</option>
+                        </select>
+                    </div>
+                    {postType === 'Bulk Sale' && (
+                        <div className="form-group">
+                            <label htmlFor="price">Price (per serving or kg)</label>
+                            <input id="price" type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g., 20" required />
+                        </div>
+                    )}
+                    <button type="submit" className="submit-btn">Post Food Now</button>
+                </form>
+            </div>
+        );
+    };
+
+    // Single Food Listing Card
+    const FoodCard = ({ post, userType, onAccept }) => (
+        <div className={`food-card ${post.type === 'Bulk Sale' ? 'bulk-sale' : ''}`}>
+            <span className={`card-tag ${
+                post.status === 'Accepted' ? 'tag-accepted' : 
+                post.type === 'Donation' ? 'tag-donation' : 'tag-bulk-sale'
+            }`}>
+                {post.status === 'Accepted' ? 'Accepted' : post.type}
+            </span>
+            <h4>{post.item}</h4>
+            <p><strong>Provider:</strong> {post.provider}</p>
+            <p><strong>Quantity:</strong> {post.quantity} servings/kg</p>
+            <p><strong>Safe Until:</strong> {post.safeUntil}</p>
+            <p><strong>For:</strong> {post.forWhom} Consumption</p>
+            {post.type === 'Bulk Sale' && <p className="price">Price: ₹{post.price} per unit</p>}
+
+            {userType === 'Receiver' && (
+                <div className="card-actions">
+                    <button onClick={() => onAccept(post.id)} disabled={post.status !== 'Available'}>
+                        {post.status === 'Available' ? 'Accept Donation' : 'Accepted'}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+    
+    // Impact Dashboard Component
+    const ImpactDashboard = ({ posts, userType }) => {
+        const metrics = useMemo(() => {
+            const relevantPosts = userType === 'Provider' ? 
+              posts.filter(p => p.provider === "Your Organization" && p.status === 'Accepted') :
+              posts.filter(p => p.status === 'Accepted'); // A simplified view for receiver
+
+            const mealsSaved = relevantPosts.reduce((sum, post) => sum + post.quantity, 0);
+            const carbonReduced = (mealsSaved * 0.45).toFixed(1); // Simplified calculation
+
+            return { mealsSaved, carbonReduced };
+        }, [posts, userType]);
+        
+        return (
+             <div className="panel">
+                <h3>📈 Your Impact</h3>
+                <div className="impact-dashboard">
+                    <div className="impact-card">
+                        <p className="value">{metrics.mealsSaved}</p>
+                        <p className="label">Meals Saved</p>
+                    </div>
+                    <div className="impact-card">
+                        <p className="value">{metrics.carbonReduced} kg</p>
+                        <p className="label">CO₂ Reduced</p>
+                    </div>
+                 </div>
+            </div>
+        );
+    };
+
+
+    // Provider Dashboard
+    const ProviderDashboard = ({ posts, onAddPost }) => {
+        const myPosts = posts.filter(p => p.provider === "Your Organization");
+
+        return (
+            <div className="dashboard">
+                <div>
+                    <FoodPostForm onAddPost={onAddPost} />
+                    <ImpactDashboard posts={posts} userType="Provider" />
+                </div>
+                <div className="listings-container">
+                    <h2>My Active Postings</h2>
+                    {myPosts.length > 0 ? (
+                        myPosts.map(post => <FoodCard key={post.id} post={post} userType="Provider" />)
+                    ) : (
+                        <p>You have no active food postings.</p>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
+    // Receiver Dashboard
+    const ReceiverDashboard = ({ posts, onAcceptPost }) => {
+        const [filter, setFilter] = useState('All');
+
+        const filteredPosts = posts.filter(post => {
+            if (filter === 'All') return post.status === 'Available';
+            if (filter === 'Donation') return post.type === 'Donation' && post.status === 'Available';
+            if (filter === 'Bulk Sale') return post.type === 'Bulk Sale' && post.status === 'Available';
+            return false;
+        });
+
+        return (
+             <div className="listings-container">
+                <h2>Available Food Near You</h2>
+                <div className="filter-buttons">
+                    <button className={filter === 'All' ? 'active' : ''} onClick={() => setFilter('All')}>All</button>
+                    <button className={filter === 'Donation' ? 'active' : ''} onClick={() => setFilter('Donation')}>✅ Donations</button>
+                    <button className={filter === 'Bulk Sale' ? 'active' : ''} onClick={() => setFilter('Bulk Sale')}>💰 Bulk Sales</button>
+                </div>
+                {filteredPosts.length > 0 ? (
+                    filteredPosts.map(post => <FoodCard key={post.id} post={post} userType="Receiver" onAccept={onAcceptPost} />)
+                ) : (
+                    <p>No available food matching your criteria. Check back soon!</p>
+                )}
+            </div>
+        );
+    };
+
+    // Main App Component
+    const App = () => {
+        const [userType, setUserType] = useState(null);
+        const [foodPosts, setFoodPosts] = useState(initialFoodPosts);
+        
+        const handleLogin = (role) => {
+            setUserType(role);
+        };
+
+        const handleLogout = () => {
+            setUserType(null);
+        };
+
+        const addFoodPost = (newPost) => {
+            setFoodPosts(prevPosts => [newPost, ...prevPosts]);
+            alert("Success! Your food post is now live.");
+        };
+
+        const acceptFoodPost = (postId) => {
+            setFoodPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post.id === postId ? { ...post, status: 'Accepted' } : post
+                )
+            );
+            alert("Thank you! The provider has been notified of your acceptance.");
+        };
+
+        return (
+            <div>
+                <Header userType={userType} onLogout={handleLogout} />
+                {!userType ? (
+                    <LoginScreen onLogin={handleLogin} />
+                ) : userType === 'Provider' ? (
+                    <ProviderDashboard posts={foodPosts} onAddPost={addFoodPost} />
+                ) : (
+                    <ReceiverDashboard posts={foodPosts} onAcceptPost={acceptFoodPost} />
+                )}
+            </div>
+        );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+
+    </script>
+</body>
+</html>

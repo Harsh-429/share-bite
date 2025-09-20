@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBite - Sharing Every Bite That Counts</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d4aa;
+            --secondary-color: #ff6b35;
+            --accent-color: #4ecdc4;
+            --dark-bg: #0a0a0a;
+            --dark-surface: #1a1a1a;
+            --dark-card: #2a2a2a;
+            --dark-text: #ffffff;
+            --dark-text-secondary: #b0b0b0;
+            --success-color: #00d4aa;
+            --warning-color: #ff6b35;
+            --error-color: #ff4757;
+            --border-color: #333333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --gradient: linear-gradient(135deg, #00d4aa 0%, #4ecdc4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            background: var(--dark-surface);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--dark-text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--dark-text);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-card);
+            border-color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--dark-text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--dark-surface);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--dark-text);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+
+        .feature-card p {
+            color: var(--dark-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* User Roles Section */
+        .user-roles {
+            padding: 80px 0;
+            background: var(--dark-bg);
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .role-card {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .role-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .role-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .role-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+        }
+
+        .role-card p {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Impact Section */
+        .impact {
+            padding: 80px 0;
+            background: var(--dark-surface);
+        }
+
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--dark-text-secondary);
+            font-weight: 500;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: var(--dark-surface);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .about-text h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+
+        .about-text h3:first-child {
+            margin-top: 0;
+        }
+
+        .about-text p {
+            color: var(--dark-text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--dark-text-secondary);
+            font-weight: 500;
+        }
+
+        .about-features {
+            margin-bottom: 4rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .feature-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-item h4 {
+            color: var(--dark-text);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item p {
+            color: var(--dark-text-secondary);
+            line-height: 1.6;
+        }
+
+        .about-values {
+            margin-bottom: 4rem;
+        }
+
+        .about-values h3 {
+            color: var(--dark-text);
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-item {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .value-item h4 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .value-item h4 i {
+            font-size: 1.1rem;
+        }
+
+        .value-item p {
+            color: var(--dark-text-secondary);
+            line-height: 1.6;
+        }
+
+        .about-team {
+            text-align: center;
+        }
+
+        .about-team h3 {
+            color: var(--dark-text);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .about-team p {
+            color: var(--dark-text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .team-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .team-stat {
+            text-align: center;
+        }
+
+        .team-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-label {
+            color: var(--dark-text-secondary);
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 80px 0;
+            background: var(--dark-bg);
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            color: var(--dark-text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-surface);
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: var(--dark-text-secondary);
+            text-decoration: none;
+            line-height: 1.6;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--dark-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--dark-card);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .close {
+            color: var(--dark-text-secondary);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        .close:hover {
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--dark-surface);
+            color: var(--dark-text);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .roles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .impact-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 0.25rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 0.9rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .impact-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .modal-content {
+                width: 98%;
+                padding: 0.75rem;
+            }
+        }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scale-in {
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .bounce-in {
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(0, 212, 170, 0.3); }
+            to { box-shadow: 0 0 30px rgba(0, 212, 170, 0.6); }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .rotate-in {
+            animation: rotateIn 0.8s ease-out;
+        }
+
+        @keyframes rotateIn {
+            from { opacity: 0; transform: rotate(-180deg) scale(0.5); }
+            to { opacity: 1; transform: rotate(0deg) scale(1); }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+        .stagger-6 { animation-delay: 0.6s; }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--dark-card);
+            color: var(--dark-text);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow);
+            z-index: 1500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success-color);
+        }
+
+        .notification.error {
+            border-left-color: var(--error-color);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>ShareBite</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#roles">User Roles</a></li>
+                <li><a href="#impact">Impact</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="user-profile.html">Profile</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn btn-secondary" onclick="openModal('loginModal')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('registerModal')">Register</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1 class="bounce-in">Sharing Every Bite That Counts</h1>
+            <p class="slide-up stagger-1">Connect food providers with receivers to eliminate waste and fight hunger. A smart platform that makes every meal matter.</p>
+            <div class="hero-buttons slide-up stagger-2">
+                <button class="btn btn-primary glow" onclick="openModal('registerModal')">
+                    <i class="fas fa-rocket"></i>
+                    Get Started
+                </button>
+                <button class="btn btn-secondary" onclick="scrollToSection('features')">
+                    <i class="fas fa-play"></i>
+                    Learn More
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title slide-in-left">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card scale-in stagger-1">
+                    <div class="feature-icon float">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>User Roles & Registration</h3>
+                    <p>Food Providers (colleges, hostels, hotels), Food Receivers (NGOs, orphanages, shelters), and Admins with verification system.</p>
+                </div>
+                <div class="feature-card scale-in stagger-2">
+                    <div class="feature-icon float">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h3>Food Donation Posting</h3>
+                    <p>Easy form to upload food details including type, quantity, expiry time, location, and photos with hygiene verification.</p>
+                </div>
+                <div class="feature-card scale-in stagger-3">
+                    <div class="feature-icon float">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Smart Matching System</h3>
+                    <p>Auto-match nearby receivers with instant notifications, search filters, and priority tagging for urgent posts.</p>
+                </div>
+                <div class="feature-card scale-in stagger-4">
+                    <div class="feature-icon float">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Pickup & Logistics</h3>
+                    <p>Track locations, coordinate via in-app chat/calls, and manage delivery options with real-time updates.</p>
+                </div>
+                <div class="feature-card scale-in stagger-5">
+                    <div class="feature-icon float">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Hygiene & Safety</h3>
+                    <p>Mandatory hygiene checkboxes, quality ratings, and safety verification to ensure food safety standards.</p>
+                </div>
+                <div class="feature-card scale-in stagger-6">
+                    <div class="feature-icon float">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Impact Dashboard</h3>
+                    <p>Track meals saved, carbon footprint reduction, leaderboards, and comprehensive analytics for all stakeholders.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Roles Section -->
+    <section id="roles" class="user-roles">
+        <div class="container">
+            <h2 class="section-title slide-in-right">Who Can Use ShareBite?</h2>
+            <div class="roles-grid">
+                <div class="role-card slide-up stagger-1">
+                    <div class="role-icon pulse">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Food Providers</h3>
+                    <p>Colleges, hostels, hotels, restaurants who have surplus food to donate or sell at low cost.</p>
+                </div>
+                <div class="role-card slide-up stagger-2">
+                    <div class="role-icon pulse">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Human Receivers</h3>
+                    <p>Orphanages, ashrams, NGOs, shelters, dharmshalas who need food for people.</p>
+                </div>
+                <div class="role-card slide-up stagger-3">
+                    <div class="role-icon pulse">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    <h3>Animal Receivers</h3>
+                    <p>Pig farms, animal shelters, stray animal NGOs who can use leftover food safely.</p>
+                </div>
+                <div class="role-card slide-up stagger-4">
+                    <div class="role-icon pulse">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Admins</h3>
+                    <p>Verify users, maintain trust, handle complaints, and ensure platform safety.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section id="impact" class="impact">
+        <div class="container">
+            <h2 class="section-title rotate-in">Our Impact</h2>
+            <div class="impact-stats">
+                <div class="stat-card scale-in stagger-1">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Meals Saved</div>
+                </div>
+                <div class="stat-card scale-in stagger-2">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Active Providers</div>
+                </div>
+                <div class="stat-card scale-in stagger-3">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Receiving Organizations</div>
+                </div>
+                <div class="stat-card scale-in stagger-4">
+                    <div class="stat-number">2,500kg</div>
+                    <div class="stat-label">CO₂ Reduced</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title slide-in-left">About ShareBite</h2>
+            <div class="about-content">
+                <div class="about-text slide-in-right">
+                    <h3>Our Mission</h3>
+                    <p>ShareBite was born from a simple yet powerful vision: to create a world where no food goes to waste and no one goes hungry. We believe that every meal matters and that technology can be a force for good in connecting communities to solve one of humanity's greatest challenges.</p>
+                    
+                    <h3>Our Story</h3>
+                    <p>Founded in 2024, ShareBite emerged from witnessing the heartbreaking reality of food waste in our communities while knowing that millions of people struggle with hunger daily. We saw an opportunity to bridge this gap through innovative technology and community engagement.</p>
+                    
+                    <h3>What We Do</h3>
+                    <p>ShareBite is a comprehensive platform that connects food providers (colleges, hostels, hotels, restaurants) with food receivers (NGOs, orphanages, shelters, animal farms) to ensure surplus food reaches those who need it most. Our smart matching system, real-time notifications, and verification processes make food sharing safe, efficient, and impactful.</p>
+                </div>
+                
+                <div class="about-stats">
+                    <div class="stat-item scale-in stagger-1">
+                        <div class="stat-number">45,000+</div>
+                        <div class="stat-label">Meals Saved</div>
+                    </div>
+                    <div class="stat-item scale-in stagger-2">
+                        <div class="stat-number">1,250+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-item scale-in stagger-3">
+                        <div class="stat-number">2,500kg</div>
+                        <div class="stat-label">CO₂ Reduced</div>
+                    </div>
+                    <div class="stat-item scale-in stagger-4">
+                        <div class="stat-number">98.5%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-features">
+                <div class="feature-grid">
+                    <div class="feature-item slide-up stagger-1">
+                        <div class="feature-icon float">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4>Community Impact</h4>
+                        <p>We're building stronger communities by connecting people and organizations who share the same values of reducing waste and helping others.</p>
+                    </div>
+                    <div class="feature-item slide-up stagger-2">
+                        <div class="feature-icon float">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h4>Environmental Sustainability</h4>
+                        <p>Every meal saved reduces our carbon footprint and helps create a more sustainable future for our planet.</p>
+                    </div>
+                    <div class="feature-item slide-up stagger-3">
+                        <div class="feature-icon float">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Trust & Safety</h4>
+                        <p>Our verification system ensures food safety and builds trust between providers and receivers through ratings and reviews.</p>
+                    </div>
+                    <div class="feature-item slide-up stagger-4">
+                        <div class="feature-icon float">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Measurable Impact</h4>
+                        <p>Track your contribution to fighting hunger and reducing waste with detailed analytics and impact reports.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-values">
+                <h3 class="slide-in-left">Our Values</h3>
+                <div class="values-grid">
+                    <div class="value-item scale-in stagger-1">
+                        <h4><i class="fas fa-handshake"></i> Collaboration</h4>
+                        <p>We believe in the power of working together to solve complex social problems.</p>
+                    </div>
+                    <div class="value-item scale-in stagger-2">
+                        <h4><i class="fas fa-balance-scale"></i> Transparency</h4>
+                        <p>Open communication and honest reporting build trust in our community.</p>
+                    </div>
+                    <div class="value-item scale-in stagger-3">
+                        <h4><i class="fas fa-lightbulb"></i> Innovation</h4>
+                        <p>We continuously improve our platform to better serve our community's needs.</p>
+                    </div>
+                    <div class="value-item scale-in stagger-4">
+                        <h4><i class="fas fa-globe"></i> Sustainability</h4>
+                        <p>Environmental responsibility is at the core of everything we do.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-team">
+                <h3 class="slide-in-right">Our Team</h3>
+                <p class="slide-up stagger-1">ShareBite is built by a passionate team of developers, designers, and social impact professionals who believe in using technology to create positive change. We're constantly working to improve the platform and expand our reach to help more communities.</p>
+                <div class="team-stats">
+                    <div class="team-stat bounce-in stagger-1">
+                        <div class="team-number">15+</div>
+                        <div class="team-label">Team Members</div>
+                    </div>
+                    <div class="team-stat bounce-in stagger-2">
+                        <div class="team-number">5</div>
+                        <div class="team-label">Cities Covered</div>
+                    </div>
+                    <div class="team-stat bounce-in stagger-3">
+                        <div class="team-number">24/7</div>
+                        <div class="team-label">Support Available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="bounce-in">Ready to Make a Difference?</h2>
+            <p class="slide-up stagger-1">Join thousands of organizations already using ShareBite to reduce food waste and fight hunger in their communities.</p>
+            <div class="hero-buttons slide-up stagger-2">
+                <button class="btn btn-primary glow" onclick="openModal('registerModal')">
+                    <i class="fas fa-user-plus"></i>
+                    Register Now
+                </button>
+                <button class="btn btn-secondary" onclick="openModal('contactModal')">
+                    <i class="fas fa-envelope"></i>
+                    Contact Us
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ShareBite</h3>
+                    <p>Connecting communities to eliminate food waste and fight hunger through technology and compassion.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="#features">Features</a></p>
+                    <p><a href="#roles">User Roles</a></p>
+                    <p><a href="#impact">Impact</a></p>
+                    <p><a href="#">Help Center</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <p><a href="#">Contact Us</a></p>
+                    <p><a href="#">Privacy Policy</a></p>
+                    <p><a href="#">Terms of Service</a></p>
+                    <p><a href="#">FAQ</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fas fa-envelope"></i> info@sharebite.com</p>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-map-marker-alt"></i> New Delhi, India</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark-text);">Login to ShareBite</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginRole">Role</label>
+                    <select id="loginRole" required>
+                        <option value="">Select your role</option>
+                        <option value="provider">Food Provider</option>
+                        <option value="receiver">Food Receiver</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark-text);">Join ShareBite</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regRole">I am a</label>
+                    <select id="regRole" required onchange="updateRegistrationForm()">
+                        <option value="">Select your role</option>
+                        <option value="provider">Food Provider</option>
+                        <option value="receiver">Food Receiver</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regFirstName">First Name</label>
+                        <input type="text" id="regFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regLastName">Last Name</label>
+                        <input type="text" id="regLastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPhone">Phone Number</label>
+                    <input type="tel" id="regPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" required>
+                </div>
+                <div class="form-group" id="organizationField" style="display: none;">
+                    <label for="regOrganization">Organization Name</label>
+                    <input type="text" id="regOrganization">
+                </div>
+                <div class="form-group" id="addressField" style="display: none;">
+                    <label for="regAddress">Address</label>
+                    <textarea id="regAddress" rows="3"></textarea>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="regTerms" required>
+                    <label for="regTerms">I agree to the Terms of Service and Privacy Policy</label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('contactModal')">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark-text);">Contact Us</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="contactName">Name</label>
+                    <input type="text" id="contactName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email</label>
+                    <input type="email" id="contactEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactSubject">Subject</label>
+                    <input type="text" id="contactSubject" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactMessage">Message</label>
+                    <textarea id="contactMessage" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Update registration form based on role
+        function updateRegistrationForm() {
+            const role = document.getElementById('regRole').value;
+            const orgField = document.getElementById('organizationField');
+            const addrField = document.getElementById('addressField');
+            
+            if (role === 'provider' || role === 'receiver') {
+                orgField.style.display = 'block';
+                addrField.style.display = 'block';
+                orgField.querySelector('input').required = true;
+                addrField.querySelector('textarea').required = true;
+            } else {
+                orgField.style.display = 'none';
+                addrField.style.display = 'none';
+                orgField.querySelector('input').required = false;
+                addrField.querySelector('textarea').required = false;
+            }
+        }
+
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Add smooth scrolling to all nav links
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    if (targetId) {
+                        scrollToSection(targetId);
+                    }
+                });
+            });
+        });
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.getElementById('loginRole').value;
+            
+            // Simple validation
+            if (!email || !password || !role) {
+                showNotification('Please fill in all fields!', 'error');
+                return;
+            }
+            
+            // Simulate login process
+            showNotification('Login successful! Redirecting...', 'success');
+            closeModal('loginModal');
+            
+            // Redirect based on role after a short delay
+            setTimeout(() => {
+                if (role === 'provider') {
+                    window.location.href = 'user-profile.html';
+                } else if (role === 'receiver') {
+                    window.location.href = 'receiver-view.html';
+                } else if (role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                }
+            }, 1500);
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Registration successful! Please check your email for verification.', 'success');
+            closeModal('registerModal');
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+            closeModal('contactModal');
+        });
+
+        // Add scroll animations
+        window.addEventListener('scroll', function() {
+            const elements = document.querySelectorAll('.feature-card, .role-card, .stat-card');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('fade-in');
+                }
+            });
+        });
+
+        // Initialize animations on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add initial animations to hero elements
+            const heroElements = document.querySelectorAll('.hero h1, .hero p, .hero-buttons');
+            heroElements.forEach((element, index) => {
+                setTimeout(() => {
+                    element.classList.add('fade-in');
+                }, index * 200);
+            });
+
+            // Add scroll-triggered animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animated elements
+            const animatedElements = document.querySelectorAll('.feature-card, .role-card, .stat-card, .feature-item, .value-item, .team-stat');
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // Add scroll-triggered animation class
+        const style = document.createElement('style');
+        style.textContent = `
+            .animate-in {
+                animation-play-state: running !important;
+            }
+            
+            .feature-card, .role-card, .stat-card, .feature-item, .value-item, .team-stat {
+                animation-play-state: paused;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request System Test - ShareBite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #333;
+            border-bottom: 2px solid #00d4aa;
+            padding-bottom: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .btn-primary { background: #00d4aa; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .request-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .request-id {
+            font-weight: bold;
+            color: #00d4aa;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ShareBite Request System Test</h1>
+        
+        <div class="test-section">
+            <h2>Test Instructions</h2>
+            <p>1. Click "Create Test Food Post" to create a sample food item</p>
+            <p>2. Click "Create Test Request" to create a request for that food</p>
+            <p>3. Check the "View Requests" section to see the request</p>
+            <p>4. Try approving/rejecting the request</p>
+            <p>5. Open user-profile.html in another tab to see if requests appear there</p>
+            
+            <button class="btn btn-primary" onclick="createTestFoodPost()">Create Test Food Post</button>
+            <button class="btn btn-success" onclick="createTestRequest()">Create Test Request</button>
+            <button class="btn btn-secondary" onclick="loadRequests()">Refresh Requests</button>
+            <button class="btn btn-secondary" onclick="clearAll()">Clear All Data</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Current Food Posts</h2>
+            <div id="foodPostsList">
+                <p>No food posts found.</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Current Requests</h2>
+            <div id="requestsList">
+                <p>No requests found.</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Debug Log</h2>
+            <div id="debugLog" class="log">
+                <p>Debug information will appear here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="backend.js"></script>
+    <script>
+        const SENDER_ID = 'user1';
+        const RECEIVER_ID = 'user2';
+
+        function log(message) {
+            const logDiv = document.getElementById('debugLog');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function createTestFoodPost() {
+            const postData = {
+                userId: SENDER_ID,
+                foodName: 'Test Rotis & Dal',
+                foodType: 'vegetarian',
+                category: 'human',
+                quantity: 50,
+                unit: 'servings',
+                pricePerUnit: 2,
+                totalAmount: 100,
+                safeUntil: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
+                description: 'Fresh rotis with dal for testing',
+                status: 'available'
+            };
+
+            const post = window.sharebiteBackend.createFoodPost(postData);
+            log(`Created food post: ${post.foodName} (ID: ${post.id})`);
+            loadFoodPosts();
+        }
+
+        function createTestRequest() {
+            const posts = window.sharebiteBackend.getFoodPostsByUser(SENDER_ID);
+            if (posts.length === 0) {
+                alert('Please create a food post first!');
+                return;
+            }
+
+            const post = posts[0];
+            const requestData = {
+                postId: post.id,
+                userId: RECEIVER_ID,
+                quantity: 10,
+                message: 'This is a test request for the food item',
+                contact: '+91 98765 43211',
+                address: 'Test Address, Mumbai'
+            };
+
+            const request = window.sharebiteBackend.createRequest(requestData);
+            log(`Created request: ${request.id} for post: ${post.foodName}`);
+            loadRequests();
+        }
+
+        function loadFoodPosts() {
+            const posts = window.sharebiteBackend.getFoodPostsByUser(SENDER_ID);
+            const container = document.getElementById('foodPostsList');
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<p>No food posts found.</p>';
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <span class="request-id">${post.foodName}</span>
+                        <span class="status status-${post.status}">${post.status.toUpperCase()}</span>
+                    </div>
+                    <p>Quantity: ${post.quantity} ${post.unit}</p>
+                    <p>Price: ₹${post.pricePerUnit} per ${post.unit}</p>
+                    <p>Requests: ${post.requests ? post.requests.length : 0}</p>
+                </div>
+            `).join('');
+        }
+
+        function loadRequests() {
+            const posts = window.sharebiteBackend.getFoodPostsByUser(SENDER_ID);
+            const allRequests = [];
+            
+            posts.forEach(post => {
+                if (post.requests) {
+                    post.requests.forEach(request => {
+                        allRequests.push({
+                            ...request,
+                            postName: post.foodName,
+                            postId: post.id
+                        });
+                    });
+                }
+            });
+
+            const container = document.getElementById('requestsList');
+            
+            if (allRequests.length === 0) {
+                container.innerHTML = '<p>No requests found.</p>';
+                return;
+            }
+
+            container.innerHTML = allRequests.map(request => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <span class="request-id">Request #${request.id.substring(0, 8)}</span>
+                        <span class="status status-${request.status}">${request.status.toUpperCase()}</span>
+                    </div>
+                    <p><strong>Food:</strong> ${request.postName}</p>
+                    <p><strong>Quantity:</strong> ${request.quantity}</p>
+                    <p><strong>Message:</strong> ${request.message}</p>
+                    <p><strong>Contact:</strong> ${request.contact}</p>
+                    <p><strong>Address:</strong> ${request.address}</p>
+                    <div>
+                        <button class="btn btn-success" onclick="approveRequest('${request.id}')">Approve</button>
+                        <button class="btn btn-secondary" onclick="rejectRequest('${request.id}')">Reject</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveRequest(requestId) {
+            window.sharebiteBackend.updateRequestStatus(requestId, 'approved');
+            log(`Approved request: ${requestId}`);
+            loadRequests();
+        }
+
+        function rejectRequest(requestId) {
+            window.sharebiteBackend.updateRequestStatus(requestId, 'rejected');
+            log(`Rejected request: ${requestId}`);
+            loadRequests();
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all data?')) {
+                localStorage.clear();
+                window.sharebiteBackend = new ShareBiteBackend();
+                loadFoodPosts();
+                loadRequests();
+                log('All data cleared');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Test page loaded');
+            loadFoodPosts();
+            loadRequests();
+        });
+    </script>
+</body>
+</html>

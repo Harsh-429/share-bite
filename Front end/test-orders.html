@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Visibility Test - ShareBite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .dashboard {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .dashboard h2 {
+            color: #333;
+            border-bottom: 2px solid #00d4aa;
+            padding-bottom: 10px;
+        }
+        .order-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .order-id {
+            font-weight: bold;
+            color: #00d4aa;
+        }
+        .order-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-completed { background: #d1ecf1; color: #0c5460; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        .detail-value {
+            font-weight: 500;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .btn-primary { background: #00d4aa; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .test-section {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ShareBite Order Visibility Test</h1>
+        
+        <div class="test-section">
+            <h3>Test Instructions</h3>
+            <p>1. Click "Create Sample Order" to create a test order</p>
+            <p>2. Check both sender and receiver dashboards to see the order</p>
+            <p>3. Try updating the order status from either dashboard</p>
+            <p>4. Verify that changes are visible in both dashboards</p>
+            <button class="btn btn-primary" onclick="createSampleOrder()">Create Sample Order</button>
+            <button class="btn btn-secondary" onclick="clearOrders()">Clear All Orders</button>
+        </div>
+
+        <div class="dashboard">
+            <h2>Sender Dashboard (Provider View)</h2>
+            <div id="senderOrders">
+                <p>No orders found. Create a sample order to test.</p>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <h2>Receiver Dashboard (Consumer View)</h2>
+            <div id="receiverOrders">
+                <p>No orders found. Create a sample order to test.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="backend.js"></script>
+    <script>
+        const SENDER_ID = 'user1';
+        const RECEIVER_ID = 'user2';
+
+        function createSampleOrder() {
+            const orderData = {
+                userId: RECEIVER_ID,
+                sellerId: SENDER_ID,
+                postId: 'post1',
+                foodName: 'Fresh Rotis & Dal',
+                quantity: 50,
+                unit: 'servings',
+                totalAmount: 100,
+                receiverName: 'Radha Sharma',
+                sellerName: 'John Doe',
+                message: 'Please deliver to our orphanage',
+                contact: '+91 98765 43211',
+                address: '456 NGO Street, Mumbai'
+            };
+
+            window.sharebiteBackend.createOrder(orderData);
+            loadOrders();
+            alert('Sample order created! Check both dashboards.');
+        }
+
+        function clearOrders() {
+            if (confirm('Are you sure you want to clear all orders?')) {
+                // Clear orders from localStorage
+                localStorage.removeItem('sharebite_orders');
+                // Reinitialize backend
+                window.sharebiteBackend = new ShareBiteBackend();
+                loadOrders();
+                alert('All orders cleared!');
+            }
+        }
+
+        function loadOrders() {
+            const senderOrders = window.sharebiteBackend.getOrdersByUser(SENDER_ID);
+            const receiverOrders = window.sharebiteBackend.getOrdersByUser(RECEIVER_ID);
+
+            displayOrders('senderOrders', senderOrders, 'sender');
+            displayOrders('receiverOrders', receiverOrders, 'receiver');
+        }
+
+        function displayOrders(containerId, orders, userType) {
+            const container = document.getElementById(containerId);
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<p>No orders found.</p>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">Order #${order.id.substring(0, 8)}</span>
+                        <span class="order-status status-${order.status}">${order.status.toUpperCase()}</span>
+                    </div>
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Food Item</div>
+                            <div class="detail-value">${order.foodName}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Quantity</div>
+                            <div class="detail-value">${order.quantity} ${order.unit}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">${userType === 'sender' ? 'Receiver' : 'Provider'}</div>
+                            <div class="detail-value">${userType === 'sender' ? order.receiverName : order.sellerName}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total Amount</div>
+                            <div class="detail-value">₹${order.totalAmount}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Created</div>
+                            <div class="detail-value">${new Date(order.createdAt).toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        ${userType === 'sender' ? getSenderActions(order) : getReceiverActions(order)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getSenderActions(order) {
+            let actions = '';
+            if (order.status === 'pending') {
+                actions += `<button class="btn btn-primary" onclick="updateOrderStatus('${order.id}', 'approved')">Approve</button>`;
+                actions += `<button class="btn btn-danger" onclick="updateOrderStatus('${order.id}', 'cancelled')">Cancel</button>`;
+            }
+            if (order.status === 'approved') {
+                actions += `<button class="btn btn-success" onclick="updateOrderStatus('${order.id}', 'completed')">Mark Complete</button>`;
+            }
+            actions += `<button class="btn btn-secondary" onclick="viewOrderDetails('${order.id}')">Details</button>`;
+            return actions;
+        }
+
+        function getReceiverActions(order) {
+            let actions = '';
+            if (order.status === 'pending') {
+                actions += `<button class="btn btn-danger" onclick="updateOrderStatus('${order.id}', 'cancelled')">Cancel</button>`;
+            }
+            if (order.status === 'approved') {
+                actions += `<button class="btn btn-primary" onclick="trackOrder('${order.id}')">Track</button>`;
+            }
+            if (order.status === 'completed') {
+                actions += `<button class="btn btn-success" onclick="rateOrder('${order.id}')">Rate</button>`;
+            }
+            actions += `<button class="btn btn-secondary" onclick="viewOrderDetails('${order.id}')">Details</button>`;
+            return actions;
+        }
+
+        function updateOrderStatus(orderId, status) {
+            window.sharebiteBackend.updateOrderStatus(orderId, status);
+            loadOrders();
+            alert(`Order ${status} successfully!`);
+        }
+
+        function viewOrderDetails(orderId) {
+            const orders = window.sharebiteBackend.getOrdersByUser(SENDER_ID).concat(
+                window.sharebiteBackend.getOrdersByUser(RECEIVER_ID)
+            );
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                alert(`Order Details:\nID: ${order.id}\nStatus: ${order.status}\nFood: ${order.foodName}\nQuantity: ${order.quantity} ${order.unit}\nReceiver: ${order.receiverName}\nProvider: ${order.sellerName}\nTotal: ₹${order.totalAmount}`);
+            }
+        }
+
+        function trackOrder(orderId) {
+            alert('Order tracking feature - Order ID: ' + orderId);
+        }
+
+        function rateOrder(orderId) {
+            const rating = prompt('Rate this order (1-5 stars):');
+            if (rating && rating >= 1 && rating <= 5) {
+                alert(`Thank you for rating! You gave ${rating} stars.`);
+            }
+        }
+
+        // Load orders on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareBite - User Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d4aa;
+            --secondary-color: #ff6b35;
+            --accent-color: #4ecdc4;
+            --dark-bg: #0a0a0a;
+            --dark-surface: #1a1a1a;
+            --dark-card: #2a2a2a;
+            --dark-text: #ffffff;
+            --dark-text-secondary: #b0b0b0;
+            --success-color: #00d4aa;
+            --warning-color: #ff6b35;
+            --error-color: #ff4757;
+            --border-color: #333333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --gradient: linear-gradient(135deg, #00d4aa 0%, #4ecdc4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--dark-text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--dark-text);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-card);
+            border-color: var(--primary-color);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        /* Profile Layout */
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        .profile-sidebar {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .profile-name {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            text-align: center;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--dark-surface);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--dark-text-secondary);
+        }
+
+        .profile-menu {
+            list-style: none;
+        }
+
+        .profile-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--dark-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-menu a:hover,
+        .profile-menu a.active {
+            background: var(--dark-surface);
+            color: var(--primary-color);
+        }
+
+        .profile-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .profile-content {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        /* Profile Form */
+        .profile-form {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .form-section {
+            background: var(--dark-surface);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        /* Food Posts */
+        .food-posts {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .food-post {
+            background: var(--dark-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .food-post:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .post-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .post-meta {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .post-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-sold {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--accent-color);
+        }
+
+        .post-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: var(--dark-text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Requests Section */
+        .request-stats {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .request-stats .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: var(--dark-surface);
+            border-radius: 8px;
+        }
+
+        .request-stats .stat-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .request-stats .stat-label {
+            font-size: 0.8rem;
+            color: var(--dark-text-secondary);
+        }
+
+        .requests-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .request-item {
+            background: var(--dark-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .request-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .request-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .request-meta {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .request-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-approved {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--error-color);
+        }
+
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .requester-info {
+            background: var(--dark-card);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .requester-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .requester-details {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--dark-card);
+            margin: 2% auto;
+            padding: 1.5rem;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 700px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: var(--dark-text-secondary);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        .close:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .profile-layout {
+                grid-template-columns: 300px 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .profile-layout {
+                grid-template-columns: 280px 1fr;
+                gap: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .profile-sidebar {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .profile-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .profile-sidebar {
+                order: 2;
+                padding: 1rem;
+            }
+            
+            .profile-content {
+                order: 1;
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .post-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 98%;
+                margin: 1% auto;
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .profile-menu a {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.25rem;
+            }
+            
+            .profile-sidebar {
+                padding: 0.75rem;
+            }
+            
+            .profile-content {
+                padding: 0.75rem;
+            }
+            
+            .form-section {
+                padding: 1rem;
+            }
+            
+            .modal-content {
+                padding: 0.75rem;
+                width: 99%;
+                margin: 0.5% auto;
+            }
+            
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .profile-name {
+                font-size: 1.2rem;
+            }
+            
+            .profile-role {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 0.1rem;
+            }
+            
+            .profile-sidebar,
+            .profile-content {
+                padding: 0.5rem;
+            }
+            
+            .form-section {
+                padding: 0.75rem;
+            }
+            
+            .modal-content {
+                padding: 0.5rem;
+            }
+            
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .profile-name {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--dark-card);
+            color: var(--dark-text);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow);
+            z-index: 1500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success-color);
+        }
+
+        .notification.error {
+            border-left-color: var(--error-color);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>ShareBite</span>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="main.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="nearby-sellers.html">Nearby Sellers</a></li>
+                    <li><a href="bulk-selling.html">Bulk Selling</a></li>
+                    <li><a href="impact-dashboard.html">Impact</a></li>
+                    <li><a href="#" class="active">Profile</a></li>
+                </ul>
+            </nav>
+            <a href="main.html" class="btn btn-secondary">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </header>
+
+        <!-- Profile Layout -->
+        <div class="profile-layout">
+            <!-- Profile Sidebar -->
+            <aside class="profile-sidebar">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-name" id="profileName">Welcome!</div>
+                <div class="profile-role" id="profileRole">Please complete your profile</div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1,250</div>
+                        <div class="stat-label">Meals</div>
+                    </div>
+                </div>
+
+                <ul class="profile-menu">
+                    <li><a href="#" class="active" onclick="showSection('profile-info')">
+                        <i class="fas fa-user-edit"></i>
+                        Profile Info
+                    </a></li>
+                    <li><a href="#" onclick="showSection('food-posts')">
+                        <i class="fas fa-utensils"></i>
+                        My Food Posts
+                    </a></li>
+                    <li><a href="#" onclick="showSection('requests')">
+                        <i class="fas fa-hand-paper"></i>
+                        Requests
+                    </a></li>
+                    <li><a href="#" onclick="showSection('orders')">
+                        <i class="fas fa-shopping-cart"></i>
+                        Orders
+                    </a></li>
+                    <li><a href="#" onclick="showSection('reviews')">
+                        <i class="fas fa-star"></i>
+                        Reviews
+                    </a></li>
+                    <li><a href="#" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a></li>
+                </ul>
+            </aside>
+
+            <!-- Profile Content -->
+            <main class="profile-content">
+                <!-- Profile Info Section -->
+                <section id="profile-info" class="content-section active">
+                    <div class="content-header">
+                        <h2 class="content-title">Profile Information</h2>
+                        <button class="btn btn-primary" onclick="openModal('editProfileModal')">
+                            <i class="fas fa-edit"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+
+                    <div class="profile-form">
+                        <div class="form-section">
+                            <h3>Personal Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" value="" placeholder="Enter your first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" value="" placeholder="Enter your last name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" value="" placeholder="Enter your phone number">
+                    </div>
+                </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Organization Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="orgName">Organization Name</label>
+                                    <input type="text" id="orgName" value="" placeholder="Enter organization name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="orgType">Organization Type</label>
+                                    <select id="orgType">
+                                        <option value="">Select organization type</option>
+                                        <option value="restaurant">Restaurant</option>
+                                        <option value="hotel">Hotel</option>
+                                        <option value="catering">Catering Service</option>
+                                        <option value="college">College/Hostel</option>
+                                        <option value="office">Office Canteen</option>
+                                        <option value="individual">Individual</option>
+                                        <option value="ngo">NGO</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="address">Address</label>
+                                    <textarea id="address" rows="3" placeholder="Enter your complete address"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Verification Status</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Verification Status</label>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-clock" style="color: var(--warning-color);"></i>
+                                        <span style="color: var(--warning-color); font-weight: 600;">Pending</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Rating</label>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div class="stars">
+                                            <i class="fas fa-star" style="color: #666;"></i>
+                                            <i class="fas fa-star" style="color: #666;"></i>
+                                            <i class="fas fa-star" style="color: #666;"></i>
+                                            <i class="fas fa-star" style="color: #666;"></i>
+                                            <i class="fas fa-star" style="color: #666;"></i>
+                                        </div>
+                                        <span>No reviews yet</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <button type="button" class="btn btn-primary" onclick="saveProfile()" style="width: 100%;">
+                                <i class="fas fa-save"></i>
+                                Save Profile
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Food Posts Section -->
+                <section id="food-posts" class="content-section" style="display: none;">
+                    <div class="content-header">
+                        <h2 class="content-title">My Food Posts</h2>
+                        <button class="btn btn-primary" onclick="openModal('postFoodModal')">
+                            <i class="fas fa-plus"></i>
+                            Post New Food
+                        </button>
+                    </div>
+
+                    <div class="food-posts" id="foodPostsList">
+                        <!-- Food posts will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- Requests Section -->
+                <section id="requests" class="content-section" style="display: none;">
+                    <div class="content-header">
+                        <h2 class="content-title">Food Requests</h2>
+                        <div class="request-stats" id="requestStats">
+                            <span class="stat-item">
+                                <span class="stat-number" id="pendingRequests">0</span>
+                                <span class="stat-label">Pending</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-number" id="totalRequests">0</span>
+                                <span class="stat-label">Total</span>
+                            </span>
+                            <button class="btn btn-primary" onclick="loadRequests()" style="margin-left: 1rem;">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                            <button class="btn btn-secondary" onclick="createTestRequest()" style="margin-left: 0.5rem;">
+                                <i class="fas fa-plus"></i>
+                                Test Request
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="requests-list" id="requestsList">
+                        <!-- Requests will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- Other sections will be added here -->
+                <section id="orders" class="content-section" style="display: none;">
+                    <div class="content-header">
+                        <h2 class="content-title">Orders</h2>
+                    </div>
+                    <p>Order management will be implemented here.</p>
+                </section>
+
+                <section id="reviews" class="content-section" style="display: none;">
+                    <div class="content-header">
+                        <h2 class="content-title">Reviews & Ratings</h2>
+                    </div>
+                    <p>Reviews and ratings will be displayed here.</p>
+                </section>
+
+                <section id="settings" class="content-section" style="display: none;">
+                    <div class="content-header">
+                        <h2 class="content-title">Account Settings</h2>
+                    </div>
+                    <p>Account settings will be managed here.</p>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editProfileModal')">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark-text);">Edit Profile</h2>
+            <form id="editProfileForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" id="editFirstName" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" id="editLastName" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" id="editEmail" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone</label>
+                        <input type="tel" id="editPhone" value="" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editOrgName">Organization Name</label>
+                    <input type="text" id="editOrgName" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAddress">Address</label>
+                    <textarea id="editAddress" rows="3" required placeholder="Enter your address"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Post Food Modal -->
+    <div id="postFoodModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('postFoodModal')">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark-text);">Post New Food</h2>
+            <form id="postFoodForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="foodType">Food Type</label>
+                        <select id="foodType" required>
+                            <option value="">Select food type</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="non-vegetarian">Non-Vegetarian</option>
+                            <option value="raw">Raw Ingredients</option>
+                            <option value="cooked">Cooked Food</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="foodCategory">Category</label>
+                        <select id="foodCategory" required>
+                            <option value="">Select category</option>
+                            <option value="human">Human Consumption</option>
+                            <option value="animal">Animal Consumption</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="foodName">Food Name</label>
+                    <input type="text" id="foodName" placeholder="e.g., Fresh Rotis & Dal" required>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" placeholder="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit">Unit</label>
+                        <select id="unit" required>
+                            <option value="servings">Servings</option>
+                            <option value="kg">Kilograms</option>
+                            <option value="liters">Liters</option>
+                            <option value="pieces">Pieces</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="pricePerUnit">Price Per Unit (₹)</label>
+                        <input type="number" id="pricePerUnit" placeholder="2" step="0.5">
+                        <small style="color: var(--dark-text-secondary); font-size: 0.8rem;">Leave empty for free donation</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalAmount">Total Amount (₹)</label>
+                        <input type="number" id="totalAmount" placeholder="Auto-calculated" readonly>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="safeUntil">Safe Until</label>
+                        <input type="datetime-local" id="safeUntil" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority">
+                            <option value="normal">Normal</option>
+                            <option value="urgent">Urgent (Expires in 2 hours)</option>
+                            <option value="critical">Critical (Expires in 1 hour)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3" placeholder="Describe the food items..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Food Photo (Optional)</label>
+                    <input type="file" id="photo" accept="image/*">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="hygieneFresh" required>
+                    <label for="hygieneFresh">Food is freshly prepared/collected</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="hygieneCovered" required>
+                    <label for="hygieneCovered">Food is properly covered and stored</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="hygieneSafe" required>
+                    <label for="hygieneSafe">Food is safe for consumption</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-upload"></i>
+                    Post Food
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script src="backend.js"></script>
+    <script>
+        // Global variables
+        let currentUser = null;
+        let isEditing = false;
+
+        // Initialize page
+        // Create test request function
+        function createTestRequest() {
+            if (!currentUser) {
+                alert('No current user found');
+                return;
+            }
+
+            // First, create a food post if none exists
+            const existingPosts = window.sharebiteBackend.getFoodPostsByUser(currentUser.id);
+            let postId;
+            
+            if (existingPosts.length === 0) {
+                // Create a sample food post
+                const postData = {
+                    userId: currentUser.id,
+                    foodName: 'Test Food Item',
+                    foodType: 'vegetarian',
+                    category: 'human',
+                    quantity: 50,
+                    unit: 'servings',
+                    pricePerUnit: 2,
+                    totalAmount: 100,
+                    safeUntil: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
+                    description: 'Test food item for demonstration',
+                    status: 'available'
+                };
+                
+                const newPost = window.sharebiteBackend.createFoodPost(postData);
+                postId = newPost.id;
+            } else {
+                postId = existingPosts[0].id;
+            }
+
+            // Create a test request
+            const requestData = {
+                postId: postId,
+                userId: 'user2', // Receiver user ID
+                quantity: 10,
+                message: 'This is a test request',
+                contact: '+91 98765 43211',
+                address: 'Test Address'
+            };
+
+            window.sharebiteBackend.createRequest(requestData);
+            alert('Test request created! Click Refresh to see it.');
+            loadRequests();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+            setupEventListeners();
+            loadFoodPosts();
+            loadRequests();
+        });
+
+        // Load user profile data
+        function loadUserProfile() {
+            // Get current user from URL params or default
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId') || 'user1'; // Default to user1 (sender)
+            
+            // Try to get user from backend
+            currentUser = window.sharebiteBackend.getUser(userId);
+            
+            if (!currentUser) {
+                // Create new user if doesn't exist
+                currentUser = {
+                    id: userId,
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phone: '',
+                    orgName: '',
+                    orgType: '',
+                    address: '',
+                    role: 'provider',
+                    isVerified: false,
+                    rating: 0,
+                    totalPosts: 0,
+                    totalMeals: 0
+                };
+            }
+            
+            updateProfileDisplay();
+        }
+
+        // Update profile display
+        function updateProfileDisplay() {
+            if (currentUser) {
+                // Update sidebar
+                const fullName = currentUser.firstName && currentUser.lastName 
+                    ? `${currentUser.firstName} ${currentUser.lastName}` 
+                    : 'Complete Your Profile';
+                document.getElementById('profileName').textContent = fullName;
+                document.getElementById('profileRole').textContent = currentUser.role === 'provider' ? 'Food Provider' : 'Food Receiver';
+                
+                // Update form fields
+                document.getElementById('firstName').value = currentUser.firstName || '';
+                document.getElementById('lastName').value = currentUser.lastName || '';
+                document.getElementById('email').value = currentUser.email || '';
+                document.getElementById('phone').value = currentUser.phone || '';
+                document.getElementById('orgName').value = currentUser.orgName || '';
+                document.getElementById('orgType').value = currentUser.orgType || '';
+                document.getElementById('address').value = currentUser.address || '';
+                
+                // Update stats
+                document.querySelector('.stat-number').textContent = currentUser.totalPosts || 0;
+                document.querySelectorAll('.stat-number')[1].textContent = currentUser.totalMeals || 0;
+                
+                // Update verification status
+                const verificationIcon = document.querySelector('.form-section:nth-child(3) .fas');
+                const verificationText = document.querySelector('.form-section:nth-child(3) span');
+                if (currentUser.isVerified) {
+                    verificationIcon.className = 'fas fa-check-circle';
+                    verificationIcon.style.color = 'var(--success-color)';
+                    verificationText.textContent = 'Verified';
+                    verificationText.style.color = 'var(--success-color)';
+                } else {
+                    verificationIcon.className = 'fas fa-clock';
+                    verificationIcon.style.color = 'var(--warning-color)';
+                    verificationText.textContent = 'Pending';
+                    verificationText.style.color = 'var(--warning-color)';
+                }
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Form input listeners
+            const inputs = document.querySelectorAll('#profile-info input, #profile-info select, #profile-info textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (!isEditing) {
+                        isEditing = true;
+                        showNotification('You have unsaved changes', 'warning');
+                    }
+                });
+            });
+        }
+
+        // Load food posts
+        function loadFoodPosts() {
+            if (!currentUser) return;
+            
+            const userPosts = window.sharebiteBackend.getFoodPostsByUser(currentUser.id);
+            const foodPostsList = document.getElementById('foodPostsList');
+            
+            if (userPosts.length === 0) {
+                foodPostsList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--dark-text-secondary);">
+                        <i class="fas fa-utensils" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <h3>No food posts yet</h3>
+                        <p>Start by posting your first food item!</p>
+                        <button class="btn btn-primary" onclick="openModal('postFoodModal')" style="margin-top: 1rem;">
+                            <i class="fas fa-plus"></i>
+                            Post Food
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            foodPostsList.innerHTML = userPosts.map(post => createFoodPostCard(post)).join('');
+        }
+
+        // Create food post card
+        function createFoodPostCard(post) {
+            const timeLeft = getTimeLeft(post.safeUntil);
+            const statusClass = getStatusClass(post.status);
+            const requestCount = post.requests ? post.requests.length : 0;
+            const pendingRequests = post.requests ? post.requests.filter(req => req.status === 'pending').length : 0;
+            
+            return `
+                <div class="food-post">
+                    <div class="post-header">
+                        <div>
+                            <div class="post-title">${post.foodName}</div>
+                            <div class="post-meta">Posted ${getTimeAgo(post.createdAt)} • ${post.quantity} ${post.unit}</div>
+                        </div>
+                        <span class="post-status ${statusClass}">${post.status}</span>
+                    </div>
+                    <div class="post-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Type</div>
+                            <div class="detail-value">${post.foodType}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Price</div>
+                            <div class="detail-value">${post.pricePerUnit ? '₹' + post.pricePerUnit + ' per ' + post.unit : 'Free'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Safe Until</div>
+                            <div class="detail-value">${timeLeft}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Requests</div>
+                            <div class="detail-value">${pendingRequests} pending (${requestCount} total)</div>
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="btn btn-primary btn-sm" onclick="editPost('${post.id}')">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                        <button class="btn btn-warning btn-sm" onclick="viewRequests('${post.id}')">
+                            <i class="fas fa-eye"></i>
+                            View Requests (${pendingRequests})
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deletePost('${post.id}')">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load requests
+        function loadRequests() {
+            if (!currentUser) {
+                console.log('No current user found');
+                return;
+            }
+            
+            console.log('Loading requests for user:', currentUser.id);
+            const allPosts = window.sharebiteBackend.getAllFoodPosts();
+            console.log('All food posts:', allPosts);
+            
+            const userPosts = allPosts.filter(post => post.userId === currentUser.id);
+            console.log('User posts:', userPosts);
+            
+            const allRequests = [];
+            
+            userPosts.forEach(post => {
+                if (post.requests && post.requests.length > 0) {
+                    console.log('Post has requests:', post.foodName, post.requests);
+                    post.requests.forEach(request => {
+                        allRequests.push({
+                            ...request,
+                            postId: post.id,
+                            postName: post.foodName
+                        });
+                    });
+                }
+            });
+            
+            console.log('All requests found:', allRequests);
+            
+            const requestsList = document.getElementById('requestsList');
+            const pendingCount = allRequests.filter(req => req.status === 'pending').length;
+            
+            // Update stats
+            document.getElementById('pendingRequests').textContent = pendingCount;
+            document.getElementById('totalRequests').textContent = allRequests.length;
+            
+            if (allRequests.length === 0) {
+                requestsList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--dark-text-secondary);">
+                        <i class="fas fa-hand-paper" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <h3>No requests yet</h3>
+                        <p>When people request your food items, they'll appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            requestsList.innerHTML = allRequests.map(request => createRequestCard(request)).join('');
+        }
+
+        // Create request card
+        function createRequestCard(request) {
+            const statusClass = `status-${request.status}`;
+            
+            return `
+                <div class="request-item">
+                    <div class="request-header">
+                        <div>
+                            <div class="request-title">${request.postName}</div>
+                            <div class="request-meta">Requested ${getTimeAgo(request.createdAt)} • ${request.quantity} ${request.unit || 'items'}</div>
+                        </div>
+                        <span class="request-status ${statusClass}">${request.status}</span>
+                    </div>
+                    
+                    <div class="requester-info">
+                        <div class="requester-name">Requester: ${request.requesterName || 'Anonymous'}</div>
+                        <div class="requester-details">
+                            Contact: ${request.contact || 'Not provided'}<br>
+                            Address: ${request.address || 'Not provided'}
+                        </div>
+                    </div>
+                    
+                    ${request.message ? `
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: var(--dark-card); border-radius: 8px;">
+                            <strong>Message:</strong> ${request.message}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="request-actions">
+                        ${request.status === 'pending' ? `
+                            <button class="btn btn-success btn-sm" onclick="approveRequest('${request.id}')">
+                                <i class="fas fa-check"></i>
+                                Approve
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="rejectRequest('${request.id}')">
+                                <i class="fas fa-times"></i>
+                                Reject
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-secondary btn-sm" onclick="viewRequestDetails('${request.id}')">
+                            <i class="fas fa-eye"></i>
+                            Details
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helper functions
+        function getTimeLeft(safeUntil) {
+            const now = new Date();
+            const safeTime = new Date(safeUntil);
+            const diff = safeTime - now;
+            
+            if (diff <= 0) return 'Expired';
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m left`;
+            } else {
+                return `${minutes}m left`;
+            }
+        }
+
+        function getTimeAgo(createdAt) {
+            const now = new Date();
+            const created = new Date(createdAt);
+            const diff = now - created;
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (hours > 0) {
+                return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            } else {
+                return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            }
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'available': return 'status-available';
+                case 'pending': return 'status-pending';
+                case 'sold': return 'status-sold';
+                default: return 'status-pending';
+            }
+        }
+
+        // Section switching
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+
+            // Update active menu item
+            const menuItems = document.querySelectorAll('.profile-menu a');
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Load data when switching to specific sections
+            if (sectionId === 'requests') {
+                loadRequests();
+            } else if (sectionId === 'food-posts') {
+                loadFoodPosts();
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Auto-calculate total amount
+        function calculateTotal() {
+            const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+            const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value) || 0;
+            const totalAmount = quantity * pricePerUnit;
+            document.getElementById('totalAmount').value = totalAmount.toFixed(2);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Save profile function
+        function saveProfile() {
+            if (!currentUser) return;
+            
+            // Get form data
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const orgName = document.getElementById('orgName').value.trim();
+            const orgType = document.getElementById('orgType').value;
+            const address = document.getElementById('address').value.trim();
+            
+            // Validation
+            if (!firstName || !lastName || !email) {
+                showNotification('Please fill in required fields (First Name, Last Name, Email)', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Update user data
+            const updatedUser = {
+                ...currentUser,
+                firstName,
+                lastName,
+                email,
+                phone,
+                orgName,
+                orgType,
+                address,
+                updatedAt: new Date().toISOString()
+            };
+            
+            // Save to backend
+            currentUser = window.sharebiteBackend.updateUser(currentUser.id, updatedUser);
+            if (!currentUser) {
+                currentUser = window.sharebiteBackend.createUser(updatedUser);
+            }
+            
+            // Update display
+            updateProfileDisplay();
+            isEditing = false;
+            
+            showNotification('Profile saved successfully!', 'success');
+        }
+
+        // Email validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Form submissions
+        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const firstName = document.getElementById('editFirstName').value;
+            const lastName = document.getElementById('editLastName').value;
+            const email = document.getElementById('editEmail').value;
+            const phone = document.getElementById('editPhone').value;
+            const orgName = document.getElementById('editOrgName').value;
+            const address = document.getElementById('editAddress').value;
+            
+            // Update profile display
+            if (firstName && lastName) {
+                document.getElementById('profileName').textContent = `${firstName} ${lastName}`;
+                document.getElementById('profileRole').textContent = 'Food Provider';
+            }
+            
+            // Update readonly fields
+            document.getElementById('firstName').value = firstName;
+            document.getElementById('lastName').value = lastName;
+            document.getElementById('email').value = email;
+            document.getElementById('phone').value = phone;
+            document.getElementById('orgName').value = orgName;
+            document.getElementById('address').value = address;
+            
+            showNotification('Profile updated successfully!', 'success');
+            closeModal('editProfileModal');
+        });
+
+        document.getElementById('postFoodForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Food posted successfully!', 'success');
+            closeModal('postFoodModal');
+            this.reset();
+        });
+
+        // Food post actions
+        function editPost(postId) {
+            showNotification(`Editing post: ${postId}`, 'success');
+        }
+
+        function viewRequests(postId) {
+            showNotification(`Viewing requests for: ${postId}`, 'success');
+        }
+
+        function deletePost(postId) {
+            if (confirm('Are you sure you want to delete this post?')) {
+                window.sharebiteBackend.deleteFoodPost(postId);
+                loadFoodPosts();
+                showNotification(`Post deleted: ${postId}`, 'success');
+            }
+        }
+
+        function viewDetails(postId) {
+            showNotification(`Viewing details for: ${postId}`, 'success');
+        }
+
+        function cancelPost(postId) {
+            if (confirm('Are you sure you want to cancel this post?')) {
+                showNotification(`Post cancelled: ${postId}`, 'success');
+            }
+        }
+
+        // Request management
+        function approveRequest(requestId) {
+            if (confirm('Are you sure you want to approve this request?')) {
+                window.sharebiteBackend.updateRequestStatus(requestId, 'approved');
+                loadRequests();
+                showNotification('Request approved successfully!', 'success');
+            }
+        }
+
+        function rejectRequest(requestId) {
+            if (confirm('Are you sure you want to reject this request?')) {
+                window.sharebiteBackend.updateRequestStatus(requestId, 'rejected');
+                loadRequests();
+                showNotification('Request rejected', 'success');
+            }
+        }
+
+        function viewRequestDetails(requestId) {
+            showNotification(`Viewing request details: ${requestId}`, 'success');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current time for safe until field
+            const now = new Date();
+            now.setHours(now.getHours() + 2);
+            document.getElementById('safeUntil').value = now.toISOString().slice(0, 16);
+
+            // Add event listeners for auto-calculation
+            document.getElementById('quantity').addEventListener('input', calculateTotal);
+            document.getElementById('pricePerUnit').addEventListener('input', calculateTotal);
+        });
+    </script>
+</body>
+</html>
